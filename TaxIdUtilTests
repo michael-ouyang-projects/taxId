@@ -1,0 +1,50 @@
+package fun.ouyang;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class TaxIdUtilTests {
+    @Test
+    void test_assertValidTaxId_null() {
+        TaxIdUtil.assertValidTaxId(null);
+    }
+
+    @Test
+    void test_assertValidTaxId_emptyString() {
+        TaxIdUtil.assertValidTaxId("");
+    }
+
+    @Test
+    void test_assertValidTaxId_04595257() {
+        TaxIdUtil.assertValidTaxId("04595257");
+    }
+
+    @Test
+    void test_assertValidTaxId_10458575() {
+        TaxIdUtil.assertValidTaxId("10458575");
+    }
+
+    @Test
+    void test_assertValidTaxId_19312376() {
+        TaxIdUtil.assertValidTaxId("19312376");
+    }
+
+    @Test
+    void test_assertValidTaxId_04595258() {
+        assertThrows(IllegalArgumentException.class, () ->
+                TaxIdUtil.assertValidTaxId("04595258"));
+    }
+
+    @Test
+    void test_assertValidTaxId_10458576() {
+        assertThrows(IllegalArgumentException.class, () ->
+                TaxIdUtil.assertValidTaxId("10458576"));
+    }
+
+    @Test
+    void test_assertValidTaxId_19312378() {
+        assertThrows(IllegalArgumentException.class, () ->
+                TaxIdUtil.assertValidTaxId("19312378"));
+    }
+}
