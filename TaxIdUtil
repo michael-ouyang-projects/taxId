@@ -1,0 +1,57 @@
+package fun.ouyang;
+
+import lombok.experimental.UtilityClass;
+
+import java.util.Arrays;
+
+@UtilityClass
+public class TaxIdUtil {
+    // 統一編號檢查碼邏輯: https://www.trust.org.tw/lawfiles/1100002250002.pdf
+    public static void assertValidTaxId(String taxId) {
+        if (taxId == null || taxId.isBlank()) {
+            return;
+        }
+
+        // 統一編號 * 邏輯乘數 = 乘積
+        int[] multiplier = {1, 2, 1, 2, 1, 2, 4, 1};
+        int[] multiplicationResult = new int[8];
+        for (int i = 0; i < 8; i++) {
+            multiplicationResult[i] = Character.getNumericValue(taxId.charAt(i)) * multiplier[i];
+        }
+
+        // 乘積之和
+        int[] additionResult = new int[8];
+        for (int i = 0; i < 8; i++) {
+            if (multiplicationResult[i] < 10) {
+                additionResult[i] = multiplicationResult[i];
+            } else {
+                additionResult[i] = multiplicationResult[i] / 10 + multiplicationResult[i] % 10;
+            }
+        }
+
+        // 檢查乘積之和是否能被 5 整除
+        assertValidSum(additionResult);
+    }
+
+    private static void assertValidSum(int[] additionResult) {
+        // 統一編號第七位數非 "7"
+        if (additionResult[6] != 10) {
+            if (Arrays.stream(additionResult).sum() % 5 == 0) {
+                return;
+            }
+        } else {
+            // 統一編號第七位數為 "7"，且乘積之和取 "1"
+            additionResult[6] = 1;
+            if (Arrays.stream(additionResult).sum() % 5 == 0) {
+                return;
+            }
+            // 統一編號第七位數為 "7"，且乘積之和取 "0"
+            additionResult[6] = 0;
+            if (Arrays.stream(additionResult).sum() % 5 == 0) {
+                return;
+            }
+        }
+        // 非合法的統編
+        throw new IllegalArgumentException("Invalid taxId");
+    }
+}
